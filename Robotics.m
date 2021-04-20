@@ -1,5 +1,7 @@
-clear
-close all
-clc
+clc                                          % Clearing command window,figures
+clear all
+clf
 
-hhhh
+set(0,'DefaultFigureWindowStyle','docked')   % Docking simulation beside code
+
+%% Token Location Input
