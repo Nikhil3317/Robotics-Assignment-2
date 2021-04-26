@@ -186,3 +186,16 @@ for i = 1:6:steps
    Token.base = T2;                     % Updating brick location to that wall position
    Token.plot(0);                       % Plotting movement of brick to move with UR3 end effector
 end
+
+%% Moving Dobot to Token
+
+steps = 80;                             % Number of steps used in each motion
+
+q2 = UR3.ikine(P1,q,[1,1,1,0,0,0]);     % Computing joint angles required for end effector to reach
+qMatrix = jtraj(q,q2,steps);           % desired position using inverse kinematics
+x = UR3.fkine(q2);                     % Calculating trajectory required
+disp(x);                                % using quintic polynomial method
+                                        % from Lab4 and storing in qMatrix                                                                         
+for i = 1:6:steps                       % Plotting trajectory for UR3 robot
+   UR3.plot(qMatrix(i,:));
+end
