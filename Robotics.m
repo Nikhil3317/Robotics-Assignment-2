@@ -2,11 +2,13 @@ clc                                          % Clearing command window,figures
 clear all
 clf
 
-%set(0,'DefaultFigureWindowStyle','docked')   % Docking simulation beside code
+set(0,'DefaultFigureWindowStyle','docked')   % Docking simulation beside code
 
 %% Token Location Input
 
 P1 = transl(0.6,1,0.35);
+
+
 
 %% Plot Robots
 workspace = [0 2.5 0 2.5 0 1];             % Creating scale of environment                                                      % Setting workspace of environment
@@ -49,8 +51,93 @@ hold on;
 
 %% Create Environment
 
-Environment()
+%workspace = [-5 5 -5 5 0 2];             % Creating scale of environment
 
+[f,v,data] = plyread('Table.ply','tri');      % Inputting environment ply
+                                                    % file from Blender
+
+vertexColours = [data.vertex.red, data.vertex.green, data.vertex.blue] / 255; %rgb colour
+
+hold on;                                            % Ensures environment stays
+
+for zOffset = [0]                                   % Positioned environment at the origin
+    for yOffset = [0]
+        for xOffset = [0]
+        modelcoordinate = trisurf(f,v(:,1) + xOffset,v(:,2) + yOffset, v(:,3) + zOffset ...
+        ,'FaceVertexCData',vertexColours,'EdgeColor','interp','EdgeLighting','flat');
+        end
+    end
+end
+
+axis equal;                                         
+hold on;
+
+
+
+
+[f,v,data] = plyread('Fire Extinguisher.ply','tri');      % Inputting environment ply
+                                                    % file from Blender
+
+vertexColours = [data.vertex.red, data.vertex.green, data.vertex.blue] / 255; %rgb colour
+
+hold on;                                            % Ensures environment stays
+
+for zOffset = [0]                                   % Positioned environment at the origin
+    for yOffset = [0]
+        for xOffset = [0]
+        modelcoordinate = trisurf(f,v(:,1) + xOffset,v(:,2) + yOffset, v(:,3) + zOffset ...
+        ,'FaceVertexCData',vertexColours,'EdgeColor','interp','EdgeLighting','flat');
+        end
+    end
+end
+
+axis equal;                                         
+hold on;
+
+
+
+
+[f,v,data] = plyread('E-Stop.ply','tri');      % Inputting environment ply
+                                                    % file from Blender
+
+vertexColours = [data.vertex.red, data.vertex.green, data.vertex.blue] / 255; %rgb colour
+
+hold on;                                            % Ensures environment stays
+
+for zOffset = [0]                                   % Positioned environment at the origin
+    for yOffset = [0]
+        for xOffset = [0]
+        modelcoordinate = trisurf(f,v(:,1) + xOffset,v(:,2) + yOffset, v(:,3) + zOffset ...
+        ,'FaceVertexCData',vertexColours,'EdgeColor','interp','EdgeLighting','flat');
+        end
+    end
+end
+
+axis equal;                                         
+hold on;
+
+
+
+
+
+[f,v,data] = plyread('Board.ply','tri');      % Inputting environment ply
+                                                    % file from Blender
+
+vertexColours = [data.vertex.red, data.vertex.green, data.vertex.blue] / 255; %rgb colour
+
+hold on;                                            % Ensures environment stays
+
+for zOffset = [0]                                   % Positioned environment at the origin
+    for yOffset = [0]
+        for xOffset = [0]
+        modelcoordinate = trisurf(f,v(:,1) + xOffset,v(:,2) + yOffset, v(:,3) + zOffset ...
+        ,'FaceVertexCData',vertexColours,'EdgeColor','interp','EdgeLighting','flat');
+        end
+    end
+end
+
+axis equal;                                         
+hold on;
 %% Create Floor and Walls
 
 surf([0,0;2.5,2.5],[0,2.5;0,2.5],[0.1,0.1;0.1,0.1],'CData',imread('WoodFloor.jpg'),'FaceColor','texturemap')
@@ -86,7 +173,7 @@ for i = 1:6:steps                       % Plotting trajectory for UR3 robot
    UR3.plot(qMatrix(i,:));
 end
 
-%% Moving Dobot to Token 2
+%% 
 
 q3 = UR3.ikine(transl(1,1.1,0.5),q,[1,1,1,0,0,0]);    
 qMatrix = jtraj(q2,q3,steps);           % Calculating joint angles needed to get to wall, masking off R,P,Y
@@ -100,7 +187,7 @@ for i = 1:6:steps
    Token.plot(0);                       % Plotting movement of brick to move with UR3 end effector
 end
 
-%% Moving Dobot to Token 1
+%% Moving Dobot to Token
 
 steps = 80;                             % Number of steps used in each motion
 
@@ -112,12 +199,3 @@ disp(x);                                % using quintic polynomial method
 for i = 1:6:steps                       % Plotting trajectory for UR3 robot
    UR3.plot(qMatrix(i,:));
 end
-
-%% Moving Dobot to Token 2
-
-
-
-
-
-
-
