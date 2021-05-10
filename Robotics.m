@@ -6,53 +6,23 @@ set(0,'DefaultFigureWindowStyle','docked')   % Docking simulation beside code
 
 %% Token Location Input
 
-%P1 = transl(0.6,1,0.35);
+P1 = transl(0.6,0.6,0.35);
+% P2 = transl(1.75,0.5,0.2);                   
+% P3 = transl(2,0.5,0.2);
+% P4 = transl(1.5,0.25,0.22);
+% P5 = transl(1.75,0.25,0.2);
+% P6 = transl(2,0.25,0.2);
+% P7 = transl(1.5,0.75,0.2);
+% P8 = transl(1.75,0.75,0.2);
+% P9 = transl(2.25,0.85,0.2);
 
 %% Plot Robots
-% workspace = [0 2 0 2 0 1];             % Creating scale of environment                                                      % Setting workspace of environment
-% scale = 1.5;                                   % Scaling/ size of UR3 robot                                           % Scale setting of robot
-% base = transl(0.6,1.4,0.6);
 
 q0 = [0,0,0,0];
 
 dobot1 = dobot;
 
-%hold on;
-
 dobot2 = dobot2;
-
-% L1 = Link('d',0.1519,'a',0,'alpha',pi/2,'qlim',deg2rad([-360,360]), 'offset', 0);     % DH parameters of UR3 robot
-% L2 = Link('d',0,'a',-0.24365,'alpha',0,'qlim', deg2rad([-360,360]), 'offset',0); 
-% L3 = Link('d',0,'a',-0.21325,'alpha',0,'qlim', deg2rad([-360,360]), 'offset', 0);
-% L4 = Link('d',0.11235,'a',0,'alpha',pi/2,'qlim',deg2rad([-360,360]),'offset', 0); 
-% L5 = Link('d',0.08535,'a',0,'alpha',-pi/2,'qlim',deg2rad([-360,360]), 'offset',0);
-% L6 = Link('d',0.0819,'a',0,'alpha',0,'qlim',deg2rad([-360,360]), 'offset', 0);
-% 
-% UR3 = SerialLink([L1 L2 L3 L4 L5 L6],'name','DoBot','base',base);                     % 6 links for robot, assigning position using serial link class
-% q = zeros(1,6);                              % Initial joint angles of UR3                                       % Initial joint angles
-                                             % stored in a zeroes matrix
-                                             
-% UR3.plot(q,'workspace',workspace,'scale',scale);  % Plotting UR3 in workspace                                    
-
-% hold on;
-
-
-% base1 = transl(1.9,1.4,0.6);
-% L1 = Link('d',0.1519,'a',0,'alpha',pi/2,'qlim',deg2rad([-360,360]), 'offset', 0);     % DH parameters of UR3 robot
-% L2 = Link('d',0,'a',-0.24365,'alpha',0,'qlim', deg2rad([-360,360]), 'offset',0); 
-% L3 = Link('d',0,'a',-0.21325,'alpha',0,'qlim', deg2rad([-360,360]), 'offset', 0);
-% L4 = Link('d',0.11235,'a',0,'alpha',pi/2,'qlim',deg2rad([-360,360]),'offset', 0); 
-% L5 = Link('d',0.08535,'a',0,'alpha',-pi/2,'qlim',deg2rad([-360,360]), 'offset',0);
-% L6 = Link('d',0.0819,'a',0,'alpha',0,'qlim',deg2rad([-360,360]), 'offset', 0);
-% 
-% Dobot2 = SerialLink([L1 L2 L3 L4 L5 L6],'name','DoBot2','base',base1);                     % 6 links for robot, assigning position using serial link class
-% q = zeros(1,6);                              % Initial joint angles of UR3                                       % Initial joint angles
-                                             % stored in a zeroes matrix
-                                             
-%Dobot2.plot(q,'workspace',workspace,'scale',scale);  % Plotting UR3 in workspace                                    
-
-% hold on;
-
 
 %% Create Environment
 
@@ -62,7 +32,7 @@ Environment()
 
 
 %% Plotting Token
-%workspace = [0 2.5 0 2.5 0 0.8];     
+workspace = [0 2 0 2 0 0.8];     
 scale = 0.5;
 
 [faceData,vertexData] = plyread('Token O.ply','tri');
@@ -71,6 +41,9 @@ Token.faces = {faceData,[]};                           % Referring to robotcows.
 Token.points = {vertexData,[]};                        % Inputting brick faces and vertices
 qa = zeros(1,1);                                       % Creating initial joint angles as zero for all bricks
 Token.plot3d(qa,'workspace',workspace,'scale',scale);
+
+
+
 
 %% Moving Dobot to Token
 % 
