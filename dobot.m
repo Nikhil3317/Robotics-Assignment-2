@@ -4,7 +4,7 @@ classdef dobot < handle
         model;
         
         %> Define the boundaries of the workspace
-        workspace = [0 2.5 0 2.5 0 1];     
+        workspace = [0 2 0 2 0 1];     
             
     end
     
@@ -41,7 +41,7 @@ function GetDobotRobot(self)
     self.model = SerialLink(L,'name',name);
     
     % Rotate robot to the correct orientation
-     self.model.base = self.model.base * transl(0.6,1.4,0.6);
+     self.model.base = self.model.base * transl(0.6,1,0.4);
 
 end
 
