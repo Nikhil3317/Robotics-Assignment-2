@@ -14,7 +14,7 @@ classdef dobot < handle
 % get the Dobot robot = 
 self.GetDobotRobot();
 % plot and colour the Dobot Magician robot = 
-self.PlotAndColourRobot();%robot,workspace);
+self.PlotAndColourRobot();%robot,workspace);  % comment out this line to view the stick model
 
 end
 
