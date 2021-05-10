@@ -41,7 +41,7 @@ function GetDobotRobot(self)
     self.model = SerialLink(L,'name',name);
     
     % Rotate robot to the correct orientation
-     self.model.base = self.model.base * transl(0.6,1,0.4);
+     self.model.base = self.model.base * transl(0.75,1,0.4);
 
 end
 

@@ -6,7 +6,7 @@ set(0,'DefaultFigureWindowStyle','docked')   % Docking simulation beside code
 
 %% Token Location Input
 
-P1 = transl(0.6,0.6,0.35);
+P1 = transl(0.8,0.7,0.35);
 % P2 = transl(1.75,0.5,0.2);                   
 % P3 = transl(2,0.5,0.2);
 % P4 = transl(1.5,0.25,0.22);
@@ -34,6 +34,9 @@ Environment()
 %% Plotting Token
 workspace = [0 2 0 2 0 0.8];     
 scale = 0.5;
+
+L1 = Link('d',0,'a',0,'alpha',pi/2,'qlim',deg2rad([-360,360]), 'offset', 0);     % DH parameters of UR3 robot
+
 
 [faceData,vertexData] = plyread('Token O.ply','tri');
 Token = SerialLink([L1],'name','Token','base',P1);     % Inputting 9 bricks     
