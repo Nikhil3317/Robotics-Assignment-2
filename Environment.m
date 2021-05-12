@@ -56,7 +56,7 @@ end
 axis equal; % Set axis to be equal        
 hold on; % Hold figure
 %% Inserting Floor and Walls
-surf([0,0;2,2],[0,2;0,2],[0.05,0.05;0.05,0.05],'CData',imread('WoodFloor.jpg'),'FaceColor','texturemap')
+surf([0,0;2,2],[0,2;0,2],[0.01,0.01;0.01,0.01],'CData',imread('WoodFloor.jpg'),'FaceColor','texturemap')
 % surf([-1.2,-1.2;3.2,3.2],[-1.2,1.2;-1.2,1.2],[0.01,0.01;0.01,0.01],'CData',imread('tape.jpg'),'FaceColor','texturemap')
 % surf([-0.8,-0.8;2.8,2.8],[-0.8,0.8;-0.8,0.8],[0.01,0.01;0.01,0.01],'CData',imread('concrete.jpg'),'FaceColor','texturemap')
 
