@@ -45,9 +45,9 @@ hold on; % Hold figure
 [f,v,data] = plyread('Board.ply','tri'); % Inserting PLY object
 vertexColours = [data.vertex.red, data.vertex.green, data.vertex.blue] / 255; % Scaling colours
 hold on; % Hold figure
-for zOffset = (0.08) % Position object in environment
-    for yOffset = (0.18)
-        for xOffset = (0.2)
+for zOffset = (0.11) % Position object in environment
+    for yOffset = (0.27)
+        for xOffset = (0.28)
         trisurf(f,v(:,1) + xOffset,v(:,2) + yOffset, v(:,3) + zOffset, ...
         'FaceVertexCData',vertexColours,'EdgeColor','interp','EdgeLighting','flat');
         end
