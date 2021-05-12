@@ -5,19 +5,19 @@ clearvars % Clear workspace variables
 clf % Close all figures
 set(0,'DefaultFigureWindowStyle','docked') % Docking figure window
 %% Setting Token Initial Positions
-token1 = transl(0.6,0.7,0.35);
-token2 = transl(0.8,0.7,0.35);                   
-token3 = transl(1.0,0.7,0.35);
-token4 = transl(1.2,0.7,0.35);
-token5 = transl(1.4,0.7,0.35);
-token6 = transl(0.8,1.3,0.35);
-token7 = transl(1.0,1.3,0.35);
-token8 = transl(1.2,1.3,0.35);
-token9 = transl(1.4,1.3,0.35);
-tokens = {token1 token2 token3 token4 token5 token6 token7 token8 token9}; % Storing token locations
+tokenO1 = transl(1.3,0.8,0.37);
+tokenO2 = transl(1.5,0.9,0.37);                   
+tokenO3 = transl(1.5,1.1,0.37);
+tokenO4 = transl(1.3,1.2,0.37);
+tokenX5 = transl(0.75,1.2,0.37);
+tokenX6 = transl(0.55,1.2,0.35);
+tokenX7 = transl(0.55,1,0.35);
+tokenX8 = transl(0.55,0.8,0.35);
+tokenX9 = transl(0.75,0.8,0.35);
+tokens = {tokenO1 tokenO2 tokenO3 tokenO4 tokenX5 tokenX6 tokenX7 tokenX8 tokenX9}; % Storing token locations
 %% Creating Environment
 Environment(); % Call environment function
-%% Plotting Both Dobots
+%% Plotting Dobots
 q0 = [0,0,0,0,0]; % Default pose
 workspace = [0 2 0 2 0 1]; % Workspace dimensions
 dobot1 = Dobot1;
@@ -29,19 +29,21 @@ axis equal; % Setting axis to be equal
 tokens_h = {0 0 0 0 0 0 0 0 0}; % Cell array for storing Token handles
 tokenVertices = {0 0 0 0 0 0 0 0 0}; % Cell array for storing Token vertices
 for i = 1:1:9 % Plotting 9 Tokens
-    if i <= 5
-        tokens_h{i} = PlaceObject('Token_O.ply'); % Importing Token-O
+    if i <= 4
+        tokens_h{i} = PlaceObject('Token O.ply'); % Importing Token-O
     else
-        tokens_h{i} = PlaceObject('Token X.PLY'); % Importing Token-X
+        tokens_h{i} = PlaceObject('Token X.ply'); % Importing Token-X
     end
     tokenVertices{i} = get(tokens_h{i},'Vertices'); % Extracting vertices data
     transformedVertices = [tokenVertices{i},ones(size(tokenVertices{i},1),1)] * tokens{i}'; % Transforming vertices
     set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating object location
     drawnow; % Update simulation
-    pause(0.01); % Wait before execution
+    pause(0.001); % Wait before execution
 end
+%% Dobot Operation
+disp('Press <Enter> to begin Dobot gameplay'); % Wait for user input
 
-%% Moving Dobot to Token
+%Moving Dobot to Token
 % 
 % steps = 80;                             % Number of steps used in each motion
 % 
