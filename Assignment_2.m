@@ -1,9 +1,9 @@
-clc                                          % Clearing command window,figures
-clear all
-clf
-
-set(0,'DefaultFigureWindowStyle','docked')   % Docking simulation beside code
-
+%% Assignment 2 Program
+% Divjot Babra, Nikhil Senthilvel, Vivien Thai
+clc % Clear command window
+clearvars % Clear workspace variables
+clf % Close all figures
+set(0,'DefaultFigureWindowStyle','docked') % Docking figure window
 %% Token Location Input
 
 P1 = transl(0.8,0.7,0.35);
