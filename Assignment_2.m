@@ -28,7 +28,7 @@ scale = 0.5;
 L1 = Link('d',0,'a',0,'alpha',pi/2,'qlim',deg2rad([-360,360]), 'offset', 0);     % DH parameters of UR3 robot
 
 [faceData,vertexData] = plyread('Token O.ply','tri');
-Token = SerialLink([L1],'name','Token','base',P1);     % Inputting 9 bricks     
+Token = SerialLink([L1],'name','Token','base',T1);     % Inputting 9 bricks     
 Token.faces = {faceData,[]};                           % Referring to robotcows.m file
 Token.points = {vertexData,[]};                        % Inputting brick faces and vertices
 qa = zeros(1,1);                                       % Creating initial joint angles as zero for all bricks
