@@ -35,6 +35,11 @@ hold on;
 dobot2 = Dobot2;
 view(3); % Setting viewpoint
 axis equal; % Setting axis to be equal
+%% Ready Position 
+steps = 5;
+qr(1,4) = 0 - qr(1,2) - qr(1,3); % Ensures that the end effector always points down
+dobot1.model.animate(jtraj(dobot1.model.getpos,qr,steps));
+dobot2.model.animate(jtraj(dobot1.model.getpos,qr,steps));
 %% Plotting Tokens
 tokens_h = {0 0 0 0 0 0 0 0 0}; % Cell array for storing Token handles
 tokenVertices = {0 0 0 0 0 0 0 0 0}; % Cell array for storing Token vertices
@@ -48,7 +53,7 @@ for i = 1:1:9 % Plotting 9 Tokens
     transformedVertices = [tokenVertices{i},ones(size(tokenVertices{i},1),1)] * tokens{i}'; % Transforming vertices
     set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating object location
     drawnow; % Update simulation
-    pause(0.001); % Wait before execution
+    pause(0.01); % Wait before execution
 end
 %% Dual Dobot Operation
 input('Press <Enter> to begin Dobot gameplay'); % Wait for user input
