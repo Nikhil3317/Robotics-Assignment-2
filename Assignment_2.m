@@ -40,7 +40,7 @@ view(3); % Setting viewpoint
 %% Ready Position
 qr(1,4) = 0 - qr(1,2) - qr(1,3); % Ensures that the end effector always points down
 dobot1.model.animate(jtraj(dobot1.model.getpos,qr,5));
-dobot2.model.animate(jtraj(dobot1.model.getpos,qr,5));
+dobot2.model.animate(jtraj(dobot2.model.getpos,qr,5));
 %% Plotting Tokens
 tokens_h = {0 0 0 0 0 0 0 0 0}; % Cell array for storing Token handles
 tokenVertices = {0 0 0 0 0 0 0 0 0}; % Cell array for storing Token vertices
@@ -68,9 +68,13 @@ for i = 1:1:4   % Collecting and placing tokens
     newQ = dobot1.model.ikcon(pickTr,oldQ); % Calculating required pose
     newTr = dobot1.model.fkine(newQ);   % Calculating forward transform
     if abs(pickTr(1,4) - newTr(1,4)) <= 0.1 && abs(pickTr(2,4) - newTr(2,4)) <= 0.1 && abs(pickTr(3,4) - newTr(3,4)) <= 0.1 % Checking reachability
-       disp(['Token',num2str(i),' is within reach.']); % Display message
+       disp(['Token ',num2str(i),' is within reach.']); % Display message
        if newTr(3,4) >= 0.4   % Check to see if the transform is above table
-          dobot1.model.animate(jtraj(oldQ,newQ,steps)); % Move robot to token
+          qMatrix = jtraj(oldQ,newQ,steps); % Calculating trajectory
+          for j = 1:1:steps % Moving robot to token
+              dobot1.model.animate(qMatrix(j,:)); % Update robot pose
+              drawnow; % Update simulation
+          end
           oldQ = newQ; % Update robot pose
           newQ = dobot1.model.ikcon(dropTr,oldQ); % Calculating required pose
           qMatrix = jtraj(oldQ,newQ,steps); % Calculating trajectory
@@ -88,7 +92,11 @@ for i = 1:1:4   % Collecting and placing tokens
        warning(['Token',num2str(i),' is out of reach.']); % Display message
     end
 end
-dobot1.model.animate(jtraj(dobot1.model.getpos,qr,steps)); % Returning to ready pose
+qMatrix = jtraj(dobot1.model.getpos,qr,steps); % Calculating trajectory
+for i = 1:1:steps % Moving robot to ready pose
+  dobot1.model.animate(qMatrix(i,:)); % Update robot pose
+  drawnow; % Update simulation
+end
 
 
 
