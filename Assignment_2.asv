@@ -26,29 +26,35 @@ board8 = transl(0.92,1.01,0.38);
 board9 = transl(0.92,1.11,0.38);
 boardSpots = {board1 board2 board3 board4 board5 board6 board7 board8 board9}; % Storing board locations
 %% Creating Environment
-% Ply files were taken from GrabCad
-
-% Link for Tic-Tac-Toe board and pieces:
-%https://grabcad.com/library/tic-tac-toe--4
-
-%Link for Table:
-%https://grabcad.com/library/zamani-premium-xl-dining-table-1
-
-
-
-
-
-
-
 Environment(); % Call environment function
 %% Plotting Dobots
-qr = deg2rad([0,-42.5,-50,0,0]); % Ready pose
-workSpace = [0 2 0 2 0 1]; % Workspace dimensions
-dobot1 = Dobot1;
-hold on;
-dobot2 = Dobot2;
+% qr = deg2rad([0,-42.5,-50,0,0]); % Ready pose
+% workSpace = [0 2 0 2 0 1]; % Workspace dimensions
+% dobot1 = Dobot1;
+
+                axis vis3d;
+                axis equal;
+                hold on; 
+                qr = deg2rad([0,-42.5,-50,0,0]); % Ready pose
+                workSpace = [0 2 0 2 0 1]; % Workspace dimensions
+                dobot1 = Dobot1; % Creating robot object
+                dobot1.model.base = transl(1.3,1,0.4) * trotz(pi);
+                dobot1.model.plot(qr,'workspace',workSpace);
+                view(3);
+
+                            ur5 = LinearUR5(false); % Creating UR5 model
+                            ur5.model.base = transl(1,1,0)*trotx(pi/2)*troty(pi/2);  % Setting UR5 base location
+                            ur5.model.plot([0 0 0 0 0 0 0],'workspace',workSpace);    % Plotting UR5 robot
+                            view(3);    % Setting 3D viewpoint
+
+hold on; % Holding figure
+dobot2 = Dobot2; % Creating robot object
 view(3); % Setting viewpoint
 axis equal; % Setting axis to be equal
+%% Ready Position
+qr(1,4) = 0 - qr(1,2) - qr(1,3); % Ensures that the end effector always points down
+dobot1.model.animate(jtraj(dobot1.model.getpos,qr,5));
+dobot2.model.animate(jtraj(dobot1.model.getpos,qr,5));
 %% Plotting Tokens
 tokens_h = {0 0 0 0 0 0 0 0 0}; % Cell array for storing Token handles
 tokenVertices = {0 0 0 0 0 0 0 0 0}; % Cell array for storing Token vertices
@@ -62,10 +68,10 @@ for i = 1:1:9 % Plotting 9 Tokens
     transformedVertices = [tokenVertices{i},ones(size(tokenVertices{i},1),1)] * tokens{i}'; % Transforming vertices
     set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating object location
     drawnow; % Update simulation
-    pause(0.001); % Wait before execution
+    pause(0.01); % Wait before execution
 end
 %% Dual Dobot Operation
-input('Press <Enter> to begin Dobot gameplay'); % Wait for user input
+input('Press <Enter> to begin Dobot Gameplay'); % Wait for user input
 
 steps = 30; % Setting robot speed
 gripOffset = 0.1; % Setting offset for gripper
