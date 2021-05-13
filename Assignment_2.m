@@ -15,10 +15,10 @@ tokenX7 = transl(0.75,0.85,0.35);
 tokenX8 = transl(0.75,0.7,0.35);
 tokenX9 = transl(0.55,1,0.35);
 tokens = {tokenO1 tokenO2 tokenO3 tokenO4 tokenX5 tokenX6 tokenX7 tokenX8 tokenX9}; % Storing token locations
-board1 = transl(1.13,0.9,0.4);
-board2 = transl(1.13,1.01,0.4);
-board3 = transl(1.13,1.11,0.4);
-board4 = transl(1.02,1.11,0.4);
+board1 = transl(1.13,0.9,0.4)*trotz(180,'deg');
+board2 = transl(1.14,1.01,0.4)*trotz(180,'deg');
+board3 = transl(1.13,1.11,0.4)*trotz(180,'deg');
+board4 = transl(1.02,1.11,0.4)*trotz(180,'deg');
 board5 = transl(1.02,1.01,0.38);
 board6 = transl(1.02,0.9,0.38);
 board7 = transl(0.92,0.9,0.38);
@@ -61,7 +61,7 @@ input('Press <Enter> to begin Dobot Gameplay'); % Wait for user input
 
 steps = 30; % Setting robot speed
 gripOffset = 0.1; % Setting offset for gripper
-waypoint = dobot1.model.fkine(deg2rad([0 -30 -30 0 0])); % Setting waypoint
+waypoint = dobot1.model.fkine(deg2rad([0 -42.5 35 0 0])); % Setting waypoint
 oldQ = qr;   % Setting initial pose
 for i = 1:1:4   % Collecting and placing tokens
     pickTr = tokens{i}*transl(0,0,gripOffset);   % Calculating pickup point
