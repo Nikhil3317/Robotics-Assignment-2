@@ -26,6 +26,20 @@ board8 = transl(0.92,1.01,0.38);
 board9 = transl(0.92,1.11,0.38);
 boardSpots = {board1 board2 board3 board4 board5 board6 board7 board8 board9}; % Storing board locations
 %% Creating Environment
+% Ply files were taken from GrabCad
+
+% Link for Tic-Tac-Toe board and pieces:
+%https://grabcad.com/library/tic-tac-toe--4
+
+%Link for Table:
+%https://grabcad.com/library/zamani-premium-xl-dining-table-1
+
+
+
+
+
+
+
 Environment(); % Call environment function
 %% Plotting Dobots
 qr = deg2rad([0,-42.5,-50,0,0]); % Ready pose
@@ -59,7 +73,16 @@ oldQ = qr;   % Setting initial pose
 for i = 1:1:4   % Collecting and placing tokens
     pickTr = tokens{i}*transl(0,0,gripOffset);   % Calculating pickup point
     dropTr = boardSpots{i}*transl(0,0,gripOffset);   % Calculating drop off point
-newfor j = 1:1:steps % Moving robot with token to board spot
+    newQ = dobot1.model.ikcon(pickTr,oldQ); % Calculating required pose
+    newTr = dobot1.model.fkine(newQ);   % Calculating forward transform
+    if abs(pickTr(1,4) - newTr(1,4)) <= 0.1 && abs(pickTr(2,4) - newTr(2,4)) <= 0.1 && abs(pickTr(3,4) - newTr(3,4)) <= 0.1 % Checking reachability
+       disp(['Token',num2str(i),' is within reach.']); % Display message
+       if newTr(3,4) >= 0.4   % Check to see if the transform is above table
+          dobot1.model.animate(jtraj(oldQ,newQ,steps)); % Move robot to token
+          oldQ = newQ; % Update robot pose
+          newQ = dobot1.model.ikcon(dropTr,oldQ); % Calculating required pose
+          qMatrix = jtraj(oldQ,newQ,steps); % Calculating trajectory
+          for j = 1:1:steps % Moving robot with token to board spot
               dobot1.model.animate(qMatrix(j,:)) % Update robot pose                                                               % Move token 
               transformedVertices=[tokenVertices{i},ones(size(tokenVertices{i},1),1)]*(dobot1.model.fkine(qMatrix(j,:))*transl(0,0,-gripOffset))'; 
               set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating token location

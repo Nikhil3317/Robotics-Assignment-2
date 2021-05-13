@@ -1,4 +1,17 @@
 function [ ] = Environment() % Function for creating simulation environment
+% Ply files were taken from GrabCad
+
+% Link for Tic-Tac-Toe board and pieces:
+%https://grabcad.com/library/tic-tac-toe--4
+
+%Link for Table:
+%https://grabcad.com/library/zamani-premium-xl-dining-table-1
+
+%Link for fire extinguisher:
+%https://grabcad.com/library/fire-extinguisher-support-1
+
+%Link for E-stop button:
+%https://grabcad.com/library/emergency-stop-button
 %% Inserting Objects
 [f,v,data] = plyread('Table.ply','tri'); % Inserting PLY object
 vertexColours = [data.vertex.red, data.vertex.green, data.vertex.blue] / 255; % Scaling colours
