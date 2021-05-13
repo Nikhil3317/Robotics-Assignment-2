@@ -61,6 +61,7 @@ input('Press <Enter> to begin Dobot Gameplay'); % Wait for user input
 
 steps = 30; % Setting robot speed
 gripOffset = 0.1; % Setting offset for gripper
+waypoint = dobot1.model.fkine(deg2rad([0 -30 -30 0 0])); % Setting waypoint
 oldQ = qr;   % Setting initial pose
 for i = 1:1:4   % Collecting and placing tokens
     pickTr = tokens{i}*transl(0,0,gripOffset);   % Calculating pickup point
@@ -76,10 +77,21 @@ for i = 1:1:4   % Collecting and placing tokens
               drawnow; % Update simulation
           end
           oldQ = newQ; % Update robot pose
+          
+newQ = dobot1.model.ikcon(waypoint,oldQ); % Calculating required pose
+qMatrix = jtraj(oldQ,newQ,steps); % Calculating trajectory
+for j = 1:1:steps % Moving robot with token through waypoint
+dobot1.model.animate(qMatrix(j,:)); % Update robot pose                                                               % Move token 
+transformedVertices=[tokenVertices{i},ones(size(tokenVertices{i},1),1)]*(dobot1.model.fkine(qMatrix(j,:))*transl(0,0,-gripOffset))'; 
+set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating token location
+drawnow;  % Update simulation
+end
+oldQ = newQ; % Update robot pose     
+                   
           newQ = dobot1.model.ikcon(dropTr,oldQ); % Calculating required pose
           qMatrix = jtraj(oldQ,newQ,steps); % Calculating trajectory
           for j = 1:1:steps % Moving robot with token to board spot
-              dobot1.model.animate(qMatrix(j,:)) % Update robot pose                                                               % Move token 
+              dobot1.model.animate(qMatrix(j,:)); % Update robot pose                                                               % Move token 
               transformedVertices=[tokenVertices{i},ones(size(tokenVertices{i},1),1)]*(dobot1.model.fkine(qMatrix(j,:))*transl(0,0,-gripOffset))'; 
               set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating token location
               drawnow;  % Update simulation
@@ -92,12 +104,13 @@ for i = 1:1:4   % Collecting and placing tokens
        warning(['Token',num2str(i),' is out of reach.']); % Display message
     end
 end
-qMatrix = jtraj(oldQ,newQ,steps); % Calculating trajectory
-for j = 1:1:steps % Moving robot to token
-  dobot1.model.animate(qMatrix(j,:)); % Update robot pose
+qMatrix = jtraj(dobot1.model.getpos,qr,steps); % Calculating trajectory
+for i = 1:1:steps % Moving robot to ready pose
+  dobot1.model.animate(qMatrix(i,:)); % Update robot pose
   drawnow; % Update simulation
 end
-dobot1.model.animate(jtraj(dobot1.model.getpos,qr,steps)); % Returning to ready pose
+
+
 
 
 
