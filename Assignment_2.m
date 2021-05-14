@@ -5,25 +5,25 @@ clearvars % Clear workspace variables
 clf % Close all figures
 set(0,'DefaultFigureWindowStyle','docked') % Docking figure window
 %% Setting Token Positions
-tokenX1 = transl(0.75,1.3,0.37);
-tokenO2 = transl(1.3,0.7,0.37);
-tokenX3 = transl(0.75,1.15,0.35);
-tokenO4 = transl(1.3,0.85,0.37);
-tokenX5 = transl(0.75,0.85,0.35);
-tokenO6 = transl(1.3,1.15,0.37);
-tokenX7 = transl(0.75,0.7,0.35);
-tokenO8 = transl(1.3,1.3,0.37);
-tokenX9 = transl(0.55,1,0.35);
+tokenX1 = transl(0.78,1.30,0.37);
+tokenO2 = transl(1.27,0.70,0.37);
+tokenX3 = transl(0.78,1.15,0.35);
+tokenO4 = transl(1.27,0.85,0.37);
+tokenX5 = transl(0.78,0.85,0.35);
+tokenO6 = transl(1.27,1.15,0.37);
+tokenX7 = transl(0.78,0.70,0.35);
+tokenO8 = transl(1.27,1.30,0.37);
+tokenX9 = transl(0.92,1.25,0.35);
 tokens = {tokenX1 tokenO2 tokenX3 tokenO4 tokenX5 tokenO6 tokenX7 tokenO8 tokenX9}; % Storing token locations
-board1 = transl(1.02,1.01,0.38);
-board2 = transl(1.13,0.9,0.4)*trotz(180,'deg');
-board3 = transl(1.02,0.9,0.38);
-board4 = transl(1.13,1.01,0.4)*trotz(180,'deg');
-board5 = transl(0.92,0.9,0.38);
-board6 = transl(1.13,1.11,0.4)*trotz(180,'deg');
-board7 = transl(0.92,1.01,0.38);
-board8 = transl(1.02,1.11,0.4)*trotz(180,'deg');
-board9 = transl(0.92,1.11,0.38);
+board1 = transl(0.92,0.90,0.38)*trotz(000,'deg');
+board2 = transl(1.02,1.01,0.40)*trotz(180,'deg');
+board3 = transl(0.92,1.00,0.38)*trotz(000,'deg');
+board4 = transl(0.92,1.11,0.40)*trotz(180,'deg');
+board5 = transl(1.13,0.90,0.38)*trotz(000,'deg');
+board6 = transl(1.02,0.90,0.40)*trotz(180,'deg');
+board7 = transl(1.02,1.11,0.38)*trotz(000,'deg');
+board8 = transl(1.13,1.11,0.40)*trotz(180,'deg');
+board9 = transl(1.13,1.00,0.38)*trotz(000,'deg');
 boardSpots = {board1 board2 board3 board4 board5 board6 board7 board8 board9}; % Storing board locations
 %% Creating Environment
 Environment(); % Call environment function
@@ -31,10 +31,10 @@ Environment(); % Call environment function
 qr = deg2rad([0,-42.5,-50,0,0]); % Ready pose
 workSpace = [0 2 0 2 0 1]; % Workspace dimensions
 dobot1 = Dobot; % Creating robot object
-dobot1.model.base = transl(1.3,1,0.4) * trotz(pi); % Repositioning Dobot1
+dobot1.model.base = transl(1.27,1,0.4) * trotz(pi); % Repositioning Dobot1
 hold on; % Holding figure
 dobot2 = Dobot; % Creating robot object
-dobot2.model.base = transl(0.75,1,0.4); % Repositioning Dobot2
+dobot2.model.base = transl(0.78,1,0.4); % Repositioning Dobot2
 axis equal; % Setting axis aspect ratio
 view(3); % Setting viewpoint
 %% Ready Position
@@ -64,7 +64,7 @@ gripOffset = 0.1; % Setting offset for gripper
 oldQ1 = qr;   % Setting initial pose for Dobot1
 oldQ2 = qr;   % Setting initial pose for Dobot2
 
-for i = 1:1:8   % Collecting and placing all tokens
+for i = 1:1:9   % Collecting and placing all tokens
     if i == 2 || i == 4 || i == 6 || i == 8 % Moving Dobot1
        pickTr = tokens{i}*transl(0,0,gripOffset);   % Calculating pickup point
        dropTr = boardSpots{i}*transl(0,0,gripOffset);   % Calculating drop off point
@@ -79,7 +79,7 @@ for i = 1:1:8   % Collecting and placing all tokens
                  drawnow; % Update simulation
              end
              oldQ1 = newQ1; % Update robot pose
-             newQ1 = dobot1.model.ikcon(dobot1.model.fkine(deg2rad([0 -42.5 35 0 0])),oldQ1); % Calculating required pose
+             newQ1 = dobot1.model.ikcon(dobot1.model.fkine(qr),oldQ1); % Calculating required pose
              qMatrix = jtraj(oldQ1,newQ1,steps); % Calculating trajectory
              for j = 1:1:steps % Moving robot with token through waypoint
                  dobot1.model.animate(qMatrix(j,:)); % Update robot pose                                                               % Move token 
@@ -129,7 +129,7 @@ for i = 1:1:8   % Collecting and placing all tokens
                  drawnow; % Update simulation
              end
              oldQ2 = newQ2; % Update robot pose
-             newQ2 = dobot2.model.ikcon(dobot2.model.fkine(deg2rad([0 -42.5 35 0 0])),oldQ2); % Calculating required pose
+             newQ2 = dobot2.model.ikcon(dobot2.model.fkine(qr),oldQ2); % Calculating required pose
              qMatrix = jtraj(oldQ2,newQ2,steps); % Calculating trajectory
              for j = 1:1:steps % Moving robot with token through waypoint
                  dobot2.model.animate(qMatrix(j,:)); % Update robot pose                                                               % Move token 
@@ -166,8 +166,6 @@ for i = 1:1:8   % Collecting and placing all tokens
        end
     end
 end
-
-
 
 
 
