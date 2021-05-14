@@ -99,19 +99,20 @@ for i = 1:1:8   % Collecting and placing all tokens
                     transformedVertices=[tokenVertices{i},ones(size(tokenVertices{i},1),1)]*(boardSpots{i})'; % Reposition token
                     set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating token location
                     drawnow;  % Update simulation   
-                 end                
+                 end
              end
              oldQ1 = newQ1; % Update robot pose
+             qMatrix = jtraj(oldQ1,qr,steps); % Calculating trajectory
+             for j = 1:1:steps % Moving robot to ready pose
+                 dobot1.model.animate(qMatrix(j,:)); % Update robot pose
+                 drawnow; % Update simulation
+             end
+             oldQ1 = qr; % Update robot pose
           else
               warning(['A pose for token ',num2str(i),' is not possible.']); % Display message
           end
        else
           warning(['Token ',num2str(i),' is out of Dobot-1 reach.']); % Display message
-       end
-       qMatrix = jtraj(dobot1.model.getpos,qr,steps); % Calculating trajectory
-       for j = 1:1:steps % Moving robot to ready pose
-           dobot1.model.animate(qMatrix(j,:)); % Update robot pose
-           drawnow; % Update simulation
        end
        
     else % Moving Dobot2
@@ -148,25 +149,23 @@ for i = 1:1:8   % Collecting and placing all tokens
                     transformedVertices=[tokenVertices{i},ones(size(tokenVertices{i},1),1)]*(boardSpots{i})'; % Reposition token
                     set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating token location
                     drawnow;  % Update simulation   
-                 end                
+                 end
              end
              oldQ2 = newQ2; % Update robot pose
+             qMatrix = jtraj(oldQ2,qr,steps); % Calculating trajectory
+             for j = 1:1:steps % Moving robot to ready pose
+                 dobot1.model.animate(qMatrix(j,:)); % Update robot pose
+                 drawnow; % Update simulation
+             end
+             oldQ2 = qr; % Update robot pose  
           else
               warning(['A pose for token ',num2str(i),' is not possible.']); % Display message
           end
        else
-          warning(['Token ',num2str(i),' is out of Dobot-1 reach.']); % Display message
+          warning(['Token ',num2str(i),' is out of Dobot-2 reach.']); % Display message
        end
-       qMatrix = jtraj(dobot1.model.getpos,qr,steps); % Calculating trajectory
-       for j = 1:1:steps % Moving robot to ready pose
-           dobot1.model.animate(qMatrix(j,:)); % Update robot pose
-           drawnow; % Update simulation
-       end
-    end   
+    end
 end
-
-
-
 
 
 
