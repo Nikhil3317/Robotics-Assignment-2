@@ -16,7 +16,7 @@ tokenX8 = transl(0.75,0.7,0.35);
 tokenX9 = transl(0.55,1,0.35);
 tokens = {tokenO1 tokenO2 tokenO3 tokenO4 tokenX5 tokenX6 tokenX7 tokenX8 tokenX9}; % Storing token locations
 board1 = transl(1.13,0.9,0.4)*trotz(180,'deg');
-board2 = transl(1.14,1.01,0.4)*trotz(180,'deg');
+board2 = transl(1.13,1.01,0.4)*trotz(180,'deg');
 board3 = transl(1.13,1.11,0.4)*trotz(180,'deg');
 board4 = transl(1.02,1.11,0.4)*trotz(180,'deg');
 board5 = transl(1.02,1.01,0.38);
@@ -80,10 +80,10 @@ for i = 1:1:4   % Collecting and placing tokens
           newQ = dobot1.model.ikcon(waypoint,oldQ); % Calculating required pose
           qMatrix = jtraj(oldQ,newQ,steps); % Calculating trajectory
           for j = 1:1:steps % Moving robot with token through waypoint
-            dobot1.model.animate(qMatrix(j,:)); % Update robot pose                                                               % Move token 
-            transformedVertices=[tokenVertices{i},ones(size(tokenVertices{i},1),1)]*(dobot1.model.fkine(qMatrix(j,:))*transl(0,0,-gripOffset))'; 
-            set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating token location
-            drawnow;  % Update simulation
+              dobot1.model.animate(qMatrix(j,:)); % Update robot pose                                                               % Move token 
+              transformedVertices=[tokenVertices{i},ones(size(tokenVertices{i},1),1)]*(dobot1.model.fkine(qMatrix(j,:))*transl(0,0,-gripOffset))'; 
+              set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating token location
+              drawnow;  % Update simulation
           end
           oldQ = newQ; % Update robot pose         
           newQ = dobot1.model.ikcon(dropTr,oldQ); % Calculating required pose
@@ -93,6 +93,11 @@ for i = 1:1:4   % Collecting and placing tokens
               transformedVertices=[tokenVertices{i},ones(size(tokenVertices{i},1),1)]*(dobot1.model.fkine(qMatrix(j,:))*transl(0,0,-gripOffset))'; 
               set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating token location
               drawnow;  % Update simulation
+              if j == steps % Fix token position on board
+                 transformedVertices=[tokenVertices{i},ones(size(tokenVertices{i},1),1)]*(boardSpots{i})'; % Reposition token
+                 set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating token location
+                 drawnow;  % Update simulation   
+              end                
           end
           oldQ = newQ; % Update robot pose
        else
