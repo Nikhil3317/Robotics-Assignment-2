@@ -166,11 +166,3 @@ for i = 1:1:8   % Collecting and placing all tokens
        end
     end
 end
-
-
-
-
-
-
-
-
