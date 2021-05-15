@@ -2,25 +2,21 @@
 % found online. Link to the model: 
 % https://www.dropbox.com/s/9a3byv5vsm3446d/3D-Model%20DOBOT%20Magician%20incl.%20Tools.zip?dl=0 
 
-classdef Dobot2 < handle
+classdef Dobot < handle
     properties
         %> Robot model = dobot
         model;
-        
         %> Define the boundaries of the workspace
-        workspace = [0 2 0 2 0 1];     
-        
+        workspace = [0 2 0 2 0 1];          
     end
     
     methods%% Class for Dobot robot simulation
- function self = Dobot2()
-
+function self = Dobot()
 % get the Dobot robot = 
 self.GetDobotRobot();
 % plot and colour the Dobot Magician robot = 
-self.PlotAndColourRobot();%robot,workspace);
-
- end
+self.PlotAndColourRobot();%robot,workspace);  % comment out this line to view the stick model
+end
 %% GetDobotRobot
 % Given a name (optional), create and return a Dobot robot model
 function GetDobotRobot(self)
@@ -30,27 +26,23 @@ function GetDobotRobot(self)
         name = ['Dobot',datestr(now,'yyyymmddTHHMMSSFFF')];
 %     end
 
-    % Create the dobot model 
-    
-    L(1) = Link('d',0.087,  'a',0,          'alpha',pi/2,       'qlim',deg2rad([-90,90]),       'offset',pi);
+    % Create the dobot model
+    L(1) = Link('d',0.087,  'a',0,          'alpha',pi/2,       'qlim',deg2rad([-90,90]),       'offset',deg2rad(180));
     L(2) = Link('d',0,      'a',-0.135,     'alpha',0,          'qlim',deg2rad([-42.5,42.5]),   'offset',deg2rad(-42.5));
     L(3) = Link('d',0,      'a',-0.147,     'alpha',0,          'qlim',deg2rad([-50,50]),       'offset',deg2rad(80));
-    L(4) = Link('d',0,      'a',0.061,      'alpha',pi/2,       'qlim',deg2rad([0,0]),       'offset',deg2rad(142.5));  
-    L(5) = Link('d',-0.023,      'a',0,     'alpha',0,          'qlim',deg2rad([-90,90]),         'offset',0);
-    
-    %     L(4) = Link('d',0,      'a',0.061,      'alpha',pi/2,       'qlim',deg2rad([0,0]),       'offset',deg2rad(142.5)); 
+    L(4) = Link('d',0,      'a',0.061,      'alpha',pi/2,       'qlim',deg2rad([0,0]),          'offset',deg2rad(142.5));  
+    L(5) = Link('d',-0.023, 'a',0,          'alpha',0,          'qlim',deg2rad([-90,90]),       'offset',0);
+    %     L(4) = Link('d',0,      'a',0.061,      'alpha',pi/2,       'qlim',deg2rad([0,0]),          'offset',deg2rad(142.5)); 
     %     L(4) = Link('d',0.11235,'a',0,          'alpha',pi/2,       'qlim',deg2rad([-90,90]),       'offset',pi/2);
-
+    
     self.model = SerialLink(L,'name',name);
     
     % Rotate robot to the correct orientation
-     self.model.base = self.model.base * transl(0.75,1,0.4);
-
+     self.model.base = self.model.base * transl(0,0,0);
 end
 
 %% PlotAndColourRobot
-% Given a robot index, add the glyphs (vertices and faces) and
-% colour them in if data is available 
+% Given a robot index, add the glyphs (vertices and faces) and colour them in if data is available 
 function PlotAndColourRobot(self)%robot,workspace)
     for linkIndex = 0:self.model.n
         [ faceData, vertexData, plyData{linkIndex+1} ] = plyread(['DobotLink',num2str(linkIndex),'.ply'],'tri'); %#ok<AGROW>
@@ -70,9 +62,9 @@ function PlotAndColourRobot(self)%robot,workspace)
         handles = findobj('Tag', self.model.name);
         h = get(handles,'UserData');
         try 
-            h.link(linkIndex+1).Children.FaceVertexCData = [plyData{linkIndex+1}.vertex.red ...
-                                                          , plyData{linkIndex+1}.vertex.green ...
-                                                          , plyData{linkIndex+1}.vertex.blue]/255;
+            h.link(linkIndex+1).Children.FaceVertexCData = [plyData{linkIndex+1}.vertex.red, ...
+                                                            plyData{linkIndex+1}.vertex.green, ...
+                                                            plyData{linkIndex+1}.vertex.blue]/255;
             h.link(linkIndex+1).Children.FaceColor = 'interp';
         catch ME_1
             disp(ME_1);

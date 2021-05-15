@@ -5,7 +5,7 @@ clear all;
 % Initiate the robots 
 q0 = [0,0,0,0];
 
-dobot1 = dobot;
+dobot1 = Dobot;
 
 hold on;
 
