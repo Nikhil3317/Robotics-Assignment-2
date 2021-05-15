@@ -1,25 +1,58 @@
 function [] = DobotControl()
+%% Setting Token Positions
+tokenX1 = transl(0.78,1.30,0.37);
+tokenO2 = transl(1.27,0.70,0.37);
+tokenX3 = transl(0.78,1.15,0.35);
+tokenO4 = transl(1.27,0.85,0.37);
+tokenX5 = transl(0.78,0.85,0.35);
+tokenO6 = transl(1.27,1.15,0.37);
+tokenX7 = transl(0.78,0.70,0.35);
+tokenO8 = transl(1.27,1.30,0.37);
+tokenX9 = transl(0.92,1.25,0.35);
+tokens = {tokenX1 tokenO2 tokenX3 tokenO4 tokenX5 tokenO6 tokenX7 tokenO8 tokenX9}; % Storing token locations
+%% Creating Environment
+Environment(); % Call environment function
+%% Plotting Dobots
+qr = deg2rad([0,-42.5,-50,0,0]); % Ready pose
+dobot1 = Dobot; % Creating robot object
+dobot1.model.base = transl(1.27,1,0.4) * trotz(pi); % Repositioning Dobot1
+hold on; % Holding figure
+dobot2 = Dobot; % Creating robot object
+dobot2.model.base = transl(0.78,1,0.4); % Repositioning Dobot2
+axis equal; % Setting axis aspect ratio
+view(3); % Setting viewpoint
+%% Ready Position
+qr(1,4) = 0 - qr(1,2) - qr(1,3); % Ensure end effector points down
+dobot1.model.animate(jtraj(dobot1.model.getpos,qr,5));
+dobot2.model.animate(jtraj(dobot2.model.getpos,qr,5));
+%% Plotting Tokens
+tokens_h = {0 0 0 0 0 0 0 0 0}; % Cell array for storing Token handles
+tokenVertices = {0 0 0 0 0 0 0 0 0}; % Cell array for storing Token vertices
+for i = 1:1:9 % Plotting 9 Tokens
+    if i == 2 || i == 4 || i == 6 || i == 8 
+        tokens_h{i} = PlaceObject('Token O.ply'); % Importing Token-O
+    else
+        tokens_h{i} = PlaceObject('Token X.ply'); % Importing Token-X
+    end
+    tokenVertices{i} = get(tokens_h{i},'Vertices'); % Extracting vertices data
+    transformedVertices = [tokenVertices{i},ones(size(tokenVertices{i},1),1)] * tokens{i}'; % Transforming vertices
+    set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating object location
+    drawnow; % Update simulation
+    pause(0.001); % Wait before execution
+end
 %% Setup joystick
-ID = 1; % Joystick ID number
-joy = vrjoystick(ID); % Setting up joystick input
+joy = vrjoystick(1); % Setting up joystick input
 caps(joy) % Display joystick information
 %% Simulation variables
 duration = 120; % Set duration of the simulation (seconds)
-dt = 0.1;       % Set time step for simulation (seconds)
+dt = 0.3;       % Set time step for simulation (seconds)
 lambda = 0.1;   % Damping factor
-%% Setup robot
-dobot = Dobot; % Creating instance of Dobot class
-dobot.model.base = transl(1,1,0); % Changing Dobot base location
-dobot.model.delay = 0.001; % Setting animation delay time
-view(3); % Change viewpoint
-hold on; % Holding figure
-axis equal; % Setting aspect ratio of axes
 %% Start simulation
-q = deg2rad([0,-42.5,-50,0,0]); % Initial pose
-n = 0;  % Reset step counter 
+q = qr; % Initial pose
+counter = 0;  % Reset step counter 
 tic;    % Begin simulation timer
 while(toc < duration) % Begin simulation
-    n = n + 1; % Increment step count
+    counter = counter + 1; % Increment step count
     [axes, buttons, ~] = read(joy); % Read joystick input
     % -------------------------------------------------------------
     % 1 - Turn joystick input into end-effector velocity command
@@ -34,10 +67,10 @@ while(toc < duration) % Begin simulation
     dx = [vx vy vz]'; % Combined velocity vector
     dx((dx.^2)<0.01) = 0; % Reducing joystick error
     % 2 - Use J inverse to calculate joint velocity
-    if n == 1 
-       J = dobot.model.jacob0(q); % Calculate Jacobian
+    if counter == 1 
+       J = dobot1.model.jacob0(q); % Calculate Jacobian
     else
-       J = dobot.model.jacob0([q,0,0]); % Calculate Jacobian
+       J = dobot1.model.jacob0([q,0,0]); % Calculate Jacobian
     end
     J = J(1:3,1:3); % Taking first 3 rows and first 3 columns
     Jinv_DLS = ((J'*J)+lambda^2*eye(3))\J'; % Computing DLS Jacobian
@@ -45,11 +78,15 @@ while(toc < duration) % Begin simulation
     % 3 - Apply joint velocity to step robot joint angles
     q = q(1,1:3) + (dq * dt)'; % Convert joint velocity to joint displacement
     % -------------------------------------------------------------
-    dobot.model.animate([q,(0-q(1,2)-q(1,3)),0]); % Update robot pose
-    if (toc > dt*n) % Wait until loop time has elapsed
-        warning('Loop %i took too much time - consider increating dt',n); % Display warning
+    dobot1.model.animate([q,(0-q(1,2)-q(1,3)),0]); % Update robot pose
+    drawnow; % Update simulation
+    if (toc > dt*counter) % Wait until loop time has elapsed
+        warning('Loop %i took too much time. Increase ''dt'' value.',counter); % Display warning
     end
-    while (toc < dt*n) % Wait until loop time has elapsed 
+    while (toc < dt*counter) % Wait until loop time has elapsed 
     end
+end
+if toc > duration % Finish simulation
+   disp('Simulation timeout.'); % Display message 
 end
 end
