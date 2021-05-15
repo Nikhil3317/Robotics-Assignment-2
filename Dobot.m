@@ -7,7 +7,9 @@ classdef Dobot < handle
         %> Robot model = dobot
         model;
         %> Define the boundaries of the workspace
-        workspace = [0 2 0 2 0 1];          
+        workspace = [0 2 0 2 0 1];
+        %> estop check
+        eStop = 0;
     end
     
     methods%% Class for Dobot robot simulation
@@ -27,13 +29,19 @@ function GetDobotRobot(self)
 %     end
 
     % Create the dobot model
-    L(1) = Link('d',0.087,  'a',0,          'alpha',pi/2,       'qlim',deg2rad([-90,90]),       'offset',deg2rad(180));
-    L(2) = Link('d',0,      'a',-0.135,     'alpha',0,          'qlim',deg2rad([-42.5,42.5]),   'offset',deg2rad(-42.5));
-    L(3) = Link('d',0,      'a',-0.147,     'alpha',0,          'qlim',deg2rad([-50,50]),       'offset',deg2rad(80));
-    L(4) = Link('d',0,      'a',0.061,      'alpha',pi/2,       'qlim',deg2rad([0,0]),          'offset',deg2rad(142.5));  
-    L(5) = Link('d',-0.023, 'a',0,          'alpha',0,          'qlim',deg2rad([-90,90]),       'offset',0);
+    L(1) = Link('d',0.087,  'a',0,          'alpha',pi/2,             'offset',deg2rad(180));
+    L(2) = Link('d',0,      'a',-0.135,     'alpha',0,                'offset',deg2rad(-42.5));
+    L(3) = Link('d',0,      'a',-0.147,     'alpha',0,                'offset',deg2rad(80));
+    L(4) = Link('d',0,      'a',0.061,      'alpha',pi/2,             'offset',deg2rad(142.5));  
+    L(5) = Link('d',-0.023, 'a',0,          'alpha',0,                'offset',0);
     %     L(4) = Link('d',0,      'a',0.061,      'alpha',pi/2,       'qlim',deg2rad([0,0]),          'offset',deg2rad(142.5)); 
     %     L(4) = Link('d',0.11235,'a',0,          'alpha',pi/2,       'qlim',deg2rad([-90,90]),       'offset',pi/2);
+    
+    L(1).qlim = deg2rad([-90,90]);      
+    L(2).qlim = deg2rad([-42.5,42.5]);
+    L(3).qlim = deg2rad([-50,50]);
+    L(4).qlim = deg2rad([0,0]);  
+    L(5).qlim = deg2rad([-90,90]);
     
     self.model = SerialLink(L,'name',name);
     
@@ -73,5 +81,11 @@ function PlotAndColourRobot(self)%robot,workspace)
     end
 end
 
+%% Ready position
+function ReadyPosition(self) 
+%     qlim = self.model.qlim;
+    qr = deg2rad([0,-42.5,-50,92.5,0]); % Ready pose 
+    self.model.animate(qr); % Ready pose 
+end
     end
 end
