@@ -29,7 +29,7 @@ boardSpots = {board1 board2 board3 board4 board5 board6 board7 board8 board9}; %
 Environment(); % Call environment function
 %% Plotting Dobots
 qr = deg2rad([0,-42.5,-50,0,0]); % Ready pose
-workSpace = [0 2 0 2 0 1]; % Workspace dimensions
+workspace = [0 2 0 2 0 1]; % Workspace dimensions
 dobot1 = Dobot; % Creating robot object
 dobot1.model.base = transl(1.27,1,0.4) * trotz(pi); % Repositioning Dobot1
 hold on; % Holding figure
@@ -38,7 +38,7 @@ dobot2.model.base = transl(0.78,1,0.4); % Repositioning Dobot2
 axis equal; % Setting axis aspect ratio
 view(3); % Setting viewpoint
 %% Ready Position
-qr(1,4) = 0 - qr(1,2) - qr(1,3); % Ensures that the end effector always points down
+qr(1,4) = 0 - qr(1,2) - qr(1,3); % Ensure end effector points down
 dobot1.model.animate(jtraj(dobot1.model.getpos,qr,5));
 dobot2.model.animate(jtraj(dobot2.model.getpos,qr,5));
 %% Plotting Tokens
@@ -57,7 +57,7 @@ for i = 1:1:9 % Plotting 9 Tokens
     pause(0.001); % Wait before execution
 end
 %% Dual Dobot Operation
-input('Press <Enter> to begin Dobot Gameplay'); % Wait for user input
+input('Press <Enter> to begin Dobot Gameplay.'); % Wait for user input
 
 steps = 30; % Setting robot speed
 gripOffset = 0.1; % Setting offset for gripper
@@ -75,6 +75,7 @@ for i = 1:1:9   % Collecting and placing all tokens
           if newTr(3,4) >= 0.4   % Check to see if the transform is above table
              qMatrix = jtraj(oldQ1,newQ1,steps); % Calculating trajectory
              for j = 1:1:steps % Moving robot to token
+                 qMatrix(j,4) = 0 - qMatrix(j,2) - qMatrix(j,3); % Ensure end effector points down 
                  dobot1.model.animate(qMatrix(j,:)); % Update robot pose
                  drawnow; % Update simulation
              end
@@ -104,6 +105,7 @@ for i = 1:1:9   % Collecting and placing all tokens
              oldQ1 = newQ1; % Update robot pose
              qMatrix = jtraj(oldQ1,qr,steps); % Calculating trajectory
              for j = 1:1:steps % Moving robot to ready pose
+                 qMatrix(j,4) = 0 - qMatrix(j,2) - qMatrix(j,3); % Ensure end effector points down 
                  dobot1.model.animate(qMatrix(j,:)); % Update robot pose
                  drawnow; % Update simulation
              end
@@ -125,6 +127,7 @@ for i = 1:1:9   % Collecting and placing all tokens
           if newTr(3,4) >= 0.4   % Check to see if the transform is above table
              qMatrix = jtraj(oldQ2,newQ2,steps); % Calculating trajectory
              for j = 1:1:steps % Moving robot to token
+                 qMatrix(j,4) = 0 - qMatrix(j,2) - qMatrix(j,3); % Ensure end effector points down 
                  dobot2.model.animate(qMatrix(j,:)); % Update robot pose
                  drawnow; % Update simulation
              end
@@ -154,6 +157,7 @@ for i = 1:1:9   % Collecting and placing all tokens
              oldQ2 = newQ2; % Update robot pose
              qMatrix = jtraj(oldQ2,qr,steps); % Calculating trajectory
              for j = 1:1:steps % Moving robot to ready pose
+                 qMatrix(j,4) = 0 - qMatrix(j,2) - qMatrix(j,3); % Ensure end effector points down 
                  dobot2.model.animate(qMatrix(j,:)); % Update robot pose
                  drawnow; % Update simulation
              end
@@ -166,8 +170,6 @@ for i = 1:1:9   % Collecting and placing all tokens
        end
     end
 end
-
-
 
 
 
