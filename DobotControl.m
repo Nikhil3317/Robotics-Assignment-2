@@ -48,12 +48,20 @@ duration = 120; % Set duration of the simulation (seconds)
 dt = 0.3;       % Set time step for simulation (seconds)
 lambda = 0.1;   % Damping factor
 %% Start simulation
+dobotSwitch = 1; % Variable for switching robots
 q = qr(1,1:3); % Initial pose
 counter = 0;  % Reset step counter 
 tic;    % Begin simulation timer
 while(toc < duration) % Begin simulation
     counter = counter + 1; % Increment step count
     [axes, buttons, ~] = read(joy); % Read joystick input
+    if buttons(9) == 1 % For switching between robots
+       if dobotSwitch == 1 % For switching between robots
+          dobotSwitch = 2; % For switching between robots
+       else
+           dobotSwitch = 1; % For switching between robots
+       end
+    end
     % -------------------------------------------------------------
     % 1 - Turn joystick input into end-effector velocity command
     Kv = 0.3; % Linear velocity gain (use to set max speed)
@@ -67,12 +75,20 @@ while(toc < duration) % Begin simulation
     dx = [vx vy vz]'; % Combined velocity vector
     dx((dx.^2)<0.01) = 0; % Reducing joystick error
     % 2 - Use J inverse to calculate joint velocity
-    J = dobot1.model.jacob0([q,0,0]); % Calculate Jacobian
+    if dobotSwitch == 1
+       J = dobot1.model.jacob0([q,0,0]); % Calculate Jacobian
+    elseif dobotSwitch == 2
+       J = dobot2.model.jacob0([q,0,0]); % Calculate Jacobian
+    end
     J = J(1:3,1:3); % Taking first 3 rows and first 3 columns
     Jinv_DLS = ((J'*J)+lambda^2*eye(3))\J'; % Computing DLS Jacobian
     dq = Jinv_DLS*dx; % Convert velocity from cartesian to joint space
     % 3 - Apply joint velocity to step robot joint angles
-    q = q(1,1:3) + (dq * dt)'; % Convert joint velocity to joint displacement
+    if dobotSwitch == 1
+       q = q(1,1:3) + (dq * dt)'; % Convert joint velocity to joint displacement
+    elseif dobotSwitch == 2
+       q = q(1,1:3) + (dq * dt)'; % Convert joint velocity to joint displacement
+    end
     % -------------------------------------------------------------
     % Joint limits
     if q(1,1) < -1.5708 
@@ -93,7 +109,11 @@ while(toc < duration) % Begin simulation
     if q(1,3) > 0.8727 
        q(1,3) = 0.8727;
     end
-    dobot1.model.animate([q,(0-q(1,2)-q(1,3)),0]); % Update robot pose
+    if dobotSwitch == 1
+       dobot1.model.animate([q,(0-q(1,2)-q(1,3)),0]); % Update robot pose
+    elseif dobotSwitch == 2
+       dobot2.model.animate([q,(0-q(1,2)-q(1,3)),0]); % Update robot pose
+    end
     drawnow; % Update simulation
     if (toc > dt*counter) % Wait until loop time has elapsed
         warning('Loop %i took too much time. Increase ''dt'' value.',counter); % Display warning
