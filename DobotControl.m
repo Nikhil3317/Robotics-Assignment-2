@@ -4,14 +4,14 @@ ID = 1; % Joystick ID number
 joy = vrjoystick(ID); % Setting up joystick input
 caps(joy) % Display joystick information
 %% Simulation variables
-duration = 120;  % Set duration of the simulation (seconds)
-dt = 0.1;      % Set time step for simulation (seconds)
+duration = 120; % Set duration of the simulation (seconds)
+dt = 0.1;       % Set time step for simulation (seconds)
 lambda = 0.1;   % Damping factor
-%% Set up robot
+%% Setup robot
 dobot = Dobot; % Creating instance of Dobot class
 dobot.model.base = transl(1,1,0); % Changing Dobot base location
 dobot.model.delay = 0.001; % Setting animation delay time
-view(2); % Change viewpoint
+view(3); % Change viewpoint
 hold on; % Holding figure
 axis equal; % Setting aspect ratio of axes
 %% Start simulation
@@ -39,13 +39,13 @@ while(toc < duration) % Begin simulation
     else
        J = dobot.model.jacob0([q,0,0]); % Calculate Jacobian
     end
-    J = J(1:3,1:3); % Taking first 3 rows and columns
+    J = J(1:3,1:3); % Taking first 3 rows and first 3 columns
     Jinv_DLS = ((J'*J)+lambda^2*eye(3))\J'; % Computing DLS Jacobian
     dq = Jinv_DLS*dx; % Convert velocity from cartesian to joint space
     % 3 - Apply joint velocity to step robot joint angles
     q = q(1,1:3) + (dq * dt)'; % Convert joint velocity to joint displacement
     % -------------------------------------------------------------
-    dobot.model.animate([q,0,0]); % Update robot pose
+    dobot.model.animate([q,(0-q(1,2)-q(1,3)),0]); % Update robot pose
     if (toc > dt*n) % Wait until loop time has elapsed
         warning('Loop %i took too much time - consider increating dt',n); % Display warning
     end
