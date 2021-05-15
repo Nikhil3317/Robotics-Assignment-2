@@ -165,11 +165,7 @@ for i = 1:1:9   % Collecting and placing all tokens
           warning(['Token ',num2str(i),' is out of Dobot-2 reach.']); % Display message
        end
     end
-
 end
-
-end
-
 
 
 
