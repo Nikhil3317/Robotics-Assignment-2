@@ -42,13 +42,13 @@ for i = 1:1:9 % Plotting 9 Tokens
 end
 %% Setup joystick
 joy = vrjoystick(1); % Setting up joystick input
-caps(joy) % Display joystick information
+disp('Input commands via joystick.'); % Display message
 %% Simulation variables
 duration = 120; % Set duration of the simulation (seconds)
 dt = 0.3;       % Set time step for simulation (seconds)
 lambda = 0.1;   % Damping factor
 %% Start simulation
-q = qr; % Initial pose
+q = qr(1,1:3); % Initial pose
 counter = 0;  % Reset step counter 
 tic;    % Begin simulation timer
 while(toc < duration) % Begin simulation
@@ -67,17 +67,32 @@ while(toc < duration) % Begin simulation
     dx = [vx vy vz]'; % Combined velocity vector
     dx((dx.^2)<0.01) = 0; % Reducing joystick error
     % 2 - Use J inverse to calculate joint velocity
-    if counter == 1 
-       J = dobot1.model.jacob0(q); % Calculate Jacobian
-    else
-       J = dobot1.model.jacob0([q,0,0]); % Calculate Jacobian
-    end
+    J = dobot1.model.jacob0([q,0,0]); % Calculate Jacobian
     J = J(1:3,1:3); % Taking first 3 rows and first 3 columns
     Jinv_DLS = ((J'*J)+lambda^2*eye(3))\J'; % Computing DLS Jacobian
     dq = Jinv_DLS*dx; % Convert velocity from cartesian to joint space
     % 3 - Apply joint velocity to step robot joint angles
     q = q(1,1:3) + (dq * dt)'; % Convert joint velocity to joint displacement
     % -------------------------------------------------------------
+    % Joint limits
+    if q(1,1) < -1.5708 
+       q(1,1) = -1.5708;
+    end
+    if q(1,1) > 1.5708
+       q(1,1) = 1.5708;
+    end
+    if q(1,2) < -0.7418 
+       q(1,2) = -0.7418;
+    end
+    if q(1,2) > 0.7418 
+       q(1,2) = 0.7418;
+    end
+    if q(1,3) < -0.8727
+       q(1,3) = -0.8727;
+    end
+    if q(1,3) > 0.8727 
+       q(1,3) = 0.8727;
+    end
     dobot1.model.animate([q,(0-q(1,2)-q(1,3)),0]); % Update robot pose
     drawnow; % Update simulation
     if (toc > dt*counter) % Wait until loop time has elapsed
