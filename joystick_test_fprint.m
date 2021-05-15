@@ -8,24 +8,24 @@ id = 1; % NOTE: may need to change if multiple joysticks present
 joy = vrjoystick(id);
 joy_info = caps(joy); % print joystick information
 
-
 fprintf('Your joystick has:\n');
 fprintf(' - %i buttons\n',joy_info.Buttons);
 fprintf(' - %i axes\n', joy_info.Axes);
 pause(2);
-
 %% Set up robot
 
-mdl_puma560;
-robot = p560;
-robot.tool = transl(0.1,0,0);
+%mdl_puma560;
+robot = Dobot;
+%robot.tool = transl(0.1,0,0);
 
 %% Start "real-time" simulation
-q = qn
+qr = deg2rad([0,-42.5,-50,0,0]); 
+
+q = qr;
 
 HF = figure(1);
-robot.plot(q);
-robot.delay = 0.001;
+robot.model.plot(q);
+robot.model.delay = 0.001;
 set(HF, 'Position',[0.1 0.1 0.8 0.8]);
 
 duration = 120;
@@ -55,16 +55,20 @@ while (toc < duration)
     
     dx((dx.^2)<0.01) = 0;
     
-    J = robot.jacob0(q);
-    dq = inv(J)*dx
+    J = robot.model.jacob0(q);
+    
+    J = J(1:2,1:3);
+    
+    dq = inv(J)*dx;
  
     q = q + (dq*dt)';
     
-    robot.animate(q);
+    robot.model.animate(q);
 
     if (toc > dt*n)
         warning('Loop %i took too much time - consider increating dt', n);
     end
+    
     while (toc < dt*n);
     end
 end
@@ -88,6 +92,3 @@ end
 %     
 % end
 %     
-    
-    
-    

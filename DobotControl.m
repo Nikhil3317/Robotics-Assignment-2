@@ -4,14 +4,14 @@ ID = 1; % Joystick ID number
 joy = vrjoystick(ID); % Setting up joystick input
 caps(joy) % Display joystick information
 %% Simulation variables
-duration = 60;  % Set duration of the simulation (seconds)
-dt = 0.40;      % Set time step for simulation (seconds)
+duration = 120;  % Set duration of the simulation (seconds)
+dt = 0.1;      % Set time step for simulation (seconds)
 lambda = 0.1;   % Damping factor
 %% Set up robot
 dobot = Dobot; % Creating instance of Dobot class
 dobot.model.base = transl(1,1,0); % Changing Dobot base location
 dobot.model.delay = 0.001; % Setting animation delay time
-view(3); % Change viewpoint
+view(2); % Change viewpoint
 hold on; % Holding figure
 axis equal; % Setting aspect ratio of axes
 %% Start simulation
