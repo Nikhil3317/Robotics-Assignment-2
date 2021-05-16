@@ -1,4 +1,4 @@
-% The .PLY files for the Dobot were created from a 3D Model of the Dobot found online.
+% The PLY files for the Dobot were created from a 3D model found online
 % Link to the model: https://www.dropbox.com/s/9a3byv5vsm3446d/3D-Model%20DOBOT%20Magician%20incl.%20Tools.zip?dl=0 
 
 classdef Dobot < handle % Creating Dobot class

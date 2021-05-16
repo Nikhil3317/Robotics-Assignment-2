@@ -1,17 +1,11 @@
-function [ ] = Environment() % Function for creating simulation environment
-% Ply files were taken from GrabCad
+%% Function for creating simulation environment
+% PLY files were sourced from: GrabCad
+% Tic-Tac-Toe board and pieces: https://grabcad.com/library/tic-tac-toe--4
+% Table: https://grabcad.com/library/zamani-premium-xl-dining-table-1
+% Fire Extinguisher: https://grabcad.com/library/fire-extinguisher-support-1
+% E-stop Button: https://grabcad.com/library/emergency-stop-button
 
-% Link for Tic-Tac-Toe board and pieces:
-%https://grabcad.com/library/tic-tac-toe--4
-
-%Link for Table:
-%https://grabcad.com/library/zamani-premium-xl-dining-table-1
-
-%Link for fire extinguisher:
-%https://grabcad.com/library/fire-extinguisher-support-1
-
-%Link for E-stop button:
-%https://grabcad.com/library/emergency-stop-button
+function [] = Environment()
 %% Inserting Objects
 [f,v,data] = plyread('Table.ply','tri'); % Inserting PLY object
 vertexColours = [data.vertex.red, data.vertex.green, data.vertex.blue] / 255; % Scaling colours
@@ -69,12 +63,7 @@ end
 axis equal; % Set axis to be equal        
 hold on; % Hold figure
 %% Inserting Floor and Walls
-surf([0,0;2,2],[0,2;0,2],[0.02,0.02;0.02,0.02],'CData',imread('WoodFloor.jpg'),'FaceColor','texturemap')
-% surf([-1.2,-1.2;3.2,3.2],[-1.2,1.2;-1.2,1.2],[0.01,0.01;0.01,0.01],'CData',imread('tape.jpg'),'FaceColor','texturemap')
-% surf([-0.8,-0.8;2.8,2.8],[-0.8,0.8;-0.8,0.8],[0.01,0.01;0.01,0.01],'CData',imread('concrete.jpg'),'FaceColor','texturemap')
-
-% surf([-4,-4;4,4],[-2,-2;-2,-2],[2,0.01;2.0,0.01],'CData',imread('Window.jpg'),'FaceColor','texturemap')
-surf([2,2;2,2],[2,2;0,0],[1,0;1,0],'CData',imread('RightWall.jpg'),'FaceColor','texturemap')
-surf([2,2;0,0],[2,2;2,2],[1,0;1,0],'CData',imread('Window.jpg'),'FaceColor','texturemap')
-% surf([-4,-4;-4,-4],[4,4;-2,-2],[2,0.01;2,0.01],'CData',imread('TicTacToeBackground.jpg'),'FaceColor','texturemap')
+surf([0,0;2,2],[0,2;0,2],[0.02,0.02;0.02,0.02],'CData',imread('WoodFloor.jpg'),'FaceColor','texturemap') % Insert image
+surf([2,2;2,2],[2,2;0,0],[1,0;1,0],'CData',imread('RightWall.jpg'),'FaceColor','texturemap') % Insert image
+surf([2,2;0,0],[2,2;2,2],[1,0;1,0],'CData',imread('Window.jpg'),'FaceColor','texturemap') % Insert image
 end

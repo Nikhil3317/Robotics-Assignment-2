@@ -1,6 +1,5 @@
-function [ ] = PlotToken()
-
-
+%% Function for plotting tokens
+function [] = PlotToken()
 tokens_h = {0 0 0 0 0 0 0 0 0}; % Cell array for storing token handles
 tokenVertices = {0 0 0 0 0 0 0 0 0}; % Cell array for storing token vertices
 for i = 1:1:9 % Plotting all tokens
@@ -15,6 +14,4 @@ for i = 1:1:9 % Plotting all tokens
     drawnow; % Update simulation
     pause(0.001); % Wait before execution
 end
-
-
 end

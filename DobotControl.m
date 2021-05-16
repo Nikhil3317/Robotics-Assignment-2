@@ -1,3 +1,6 @@
+%% Function for controlling Dobots with joystick
+% Press 'SHARE' button on PS controller to switch between Dobots
+
 function [] = DobotControl()
 %% Setting Token Positions
 tokenX1 = transl(0.78,1.30,0.37);
@@ -23,12 +26,12 @@ axis equal; % Setting axis aspect ratio
 view(3); % Setting viewpoint
 %% Ready Position
 qr(1,4) = 0 - qr(1,2) - qr(1,3); % Ensure end effector points down
-dobot1.model.animate(jtraj(dobot1.model.getpos,qr,5));
-dobot2.model.animate(jtraj(dobot2.model.getpos,qr,5));
+dobot1.model.animate(jtraj(dobot1.model.getpos,qr,5)); % Update Dobot-1 pose
+dobot2.model.animate(jtraj(dobot2.model.getpos,qr,5)); % Update Dobot-2 pose
 %% Plotting Tokens
-tokens_h = {0 0 0 0 0 0 0 0 0}; % Cell array for storing Token handles
-tokenVertices = {0 0 0 0 0 0 0 0 0}; % Cell array for storing Token vertices
-for i = 1:1:9 % Plotting 9 Tokens
+tokens_h = {0 0 0 0 0 0 0 0 0}; % Cell array for storing token handles
+tokenVertices = {0 0 0 0 0 0 0 0 0}; % Cell array for storing token vertices
+for i = 1:1:9 % Plotting all tokens
     if i == 2 || i == 4 || i == 6 || i == 8 
         tokens_h{i} = PlaceObject('Token O.ply'); % Importing Token-O
     else
@@ -36,7 +39,7 @@ for i = 1:1:9 % Plotting 9 Tokens
     end
     tokenVertices{i} = get(tokens_h{i},'Vertices'); % Extracting vertices data
     transformedVertices = [tokenVertices{i},ones(size(tokenVertices{i},1),1)] * tokens{i}'; % Transforming vertices
-    set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating object location
+    set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating token location
     drawnow; % Update simulation
     pause(0.001); % Wait before execution
 end
