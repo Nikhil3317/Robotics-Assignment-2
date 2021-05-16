@@ -40,7 +40,6 @@ view(3); % Setting viewpoint
 ReadyPosition(dobot1); % Update Dobot-1 pose
 ReadyPosition(dobot2); % Update Dobot-2 pose
 %% Plotting Tokens
-
 tokens_h = {0 0 0 0 0 0 0 0 0}; % Cell array for storing token handles
 tokenVertices = {0 0 0 0 0 0 0 0 0}; % Cell array for storing token vertices
 for i = 1:1:9 % Plotting all tokens
