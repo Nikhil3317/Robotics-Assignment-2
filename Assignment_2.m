@@ -27,27 +27,22 @@ board9 = transl(1.13,1.00,0.38)*trotz(000,'deg');
 boardSpots = {board1 board2 board3 board4 board5 board6 board7 board8 board9}; % Storing board locations
 %% Creating Environment
 Environment(); % Call environment function
-
-%% Plotting Dobots in Ready Position 
-
+%% Plotting Dobots 
 qr = deg2rad([0,-42.5,-50,0,0]); % Ready pose
 workspace = [0 2 0 2 0 1]; % Workspace dimensions
-
-dobot1 = Dobot; % Creating robot object
-dobot1.model.base = transl(1.27,1,0.4) * trotz(pi); % Repositioning Dobot1
+dobot1 = Dobot; % Creating Dobot object
+dobot1.model.base = transl(1.27,1,0.4) * trotz(pi); % Repositioning Dobot-1
 hold on; % Holding figure
-dobot2 = Dobot; % Creating robot object
-dobot2.model.base = transl(0.78,1,0.4); % Repositioning Dobot2
+dobot2 = Dobot; % Creating Dobot object
+dobot2.model.base = transl(0.78,1,0.4); % Repositioning Dobot-2
 axis equal; % Setting axis aspect ratio
 view(3); % Setting viewpoint
-
-ReadyPosition(dobot1);
-ReadyPosition(dobot2);
-
+ReadyPosition(dobot1); % Update Dobot-1 pose
+ReadyPosition(dobot2); % Update Dobot-2 pose
 %% Plotting Tokens
-tokens_h = {0 0 0 0 0 0 0 0 0}; % Cell array for storing Token handles
-tokenVertices = {0 0 0 0 0 0 0 0 0}; % Cell array for storing Token vertices
-for i = 1:1:9 % Plotting 9 Tokens
+tokens_h = {0 0 0 0 0 0 0 0 0}; % Cell array for storing token handles
+tokenVertices = {0 0 0 0 0 0 0 0 0}; % Cell array for storing token vertices
+for i = 1:1:9 % Plotting all tokens
     if i == 2 || i == 4 || i == 6 || i == 8 
         tokens_h{i} = PlaceObject('Token O.ply'); % Importing Token-O
     else
@@ -55,14 +50,14 @@ for i = 1:1:9 % Plotting 9 Tokens
     end
     tokenVertices{i} = get(tokens_h{i},'Vertices'); % Extracting vertices data
     transformedVertices = [tokenVertices{i},ones(size(tokenVertices{i},1),1)] * tokens{i}'; % Transforming vertices
-    set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating object location
+    set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating token location
     drawnow; % Update simulation
     pause(0.001); % Wait before execution
 end
 %% Dual Dobot Operation
 input('Press <Enter> to begin Dobot Gameplay.'); % Wait for user input
 
-steps = 30; % Setting robot speed
+steps = 30; % Setting speed of Dobots
 gripOffset = 0.1; % Setting offset for gripper
 oldQ1 = qr;   % Setting initial pose for Dobot1
 oldQ2 = qr;   % Setting initial pose for Dobot2
@@ -86,7 +81,6 @@ for i = 1:1:9   % Collecting and placing all tokens
              newQ1 = dobot1.model.ikcon(dobot1.model.fkine(qr),oldQ1); % Calculating required pose
              qMatrix = jtraj(oldQ1,newQ1,steps); % Calculating trajectory
              for j = 1:1:steps % Moving robot with token through waypoint
-                 qMatrix(j,4) = 0 - qMatrix(j,2) - qMatrix(j,3);
                  dobot1.model.animate(qMatrix(j,:)); % Update robot pose                                                               % Move token 
                  transformedVertices=[tokenVertices{i},ones(size(tokenVertices{i},1),1)]*(dobot1.model.fkine(qMatrix(j,:))*transl(0,0,-gripOffset))'; 
                  set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating token location
@@ -96,7 +90,6 @@ for i = 1:1:9   % Collecting and placing all tokens
              newQ1 = dobot1.model.ikcon(dropTr,oldQ1); % Calculating required pose
              qMatrix = jtraj(oldQ1,newQ1,steps); % Calculating trajectory
              for j = 1:1:steps % Moving robot with token to board spot
-                 qMatrix(j,4) = 0 - qMatrix(j,2) - qMatrix(j,3);
                  dobot1.model.animate(qMatrix(j,:)); % Update robot pose                                                               % Move token 
                  transformedVertices=[tokenVertices{i},ones(size(tokenVertices{i},1),1)]*(dobot1.model.fkine(qMatrix(j,:))*transl(0,0,-gripOffset))'; 
                  set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating token location
@@ -140,7 +133,6 @@ for i = 1:1:9   % Collecting and placing all tokens
              newQ2 = dobot2.model.ikcon(dobot2.model.fkine(qr),oldQ2); % Calculating required pose
              qMatrix = jtraj(oldQ2,newQ2,steps); % Calculating trajectory
              for j = 1:1:steps % Moving robot with token through waypoint
-                 qMatrix(j,4) = 0 - qMatrix(j,2) - qMatrix(j,3);
                  dobot2.model.animate(qMatrix(j,:)); % Update robot pose                                                               % Move token 
                  transformedVertices=[tokenVertices{i},ones(size(tokenVertices{i},1),1)]*(dobot2.model.fkine(qMatrix(j,:))*transl(0,0,-gripOffset))'; 
                  set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating token location
@@ -150,7 +142,6 @@ for i = 1:1:9   % Collecting and placing all tokens
              newQ2 = dobot2.model.ikcon(dropTr,oldQ2); % Calculating required pose
              qMatrix = jtraj(oldQ2,newQ2,steps); % Calculating trajectory
              for j = 1:1:steps % Moving robot with token to board spot
-                 qMatrix(j,4) = 0 - qMatrix(j,2) - qMatrix(j,3);
                  dobot2.model.animate(qMatrix(j,:)); % Update robot pose                                                               % Move token 
                  transformedVertices=[tokenVertices{i},ones(size(tokenVertices{i},1),1)]*(dobot2.model.fkine(qMatrix(j,:))*transl(0,0,-gripOffset))'; 
                  set(tokens_h{i},'Vertices',transformedVertices(:,1:3)); % Updating token location
@@ -177,7 +168,5 @@ for i = 1:1:9   % Collecting and placing all tokens
        end
     end
 end
-
-
 
 
