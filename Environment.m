@@ -5,6 +5,8 @@
 % Fire Extinguisher: https://grabcad.com/library/fire-extinguisher-support-1
 % E-stop Button: https://grabcad.com/library/emergency-stop-button
 
+% Cat model was sourced from Free3D - https://free3d.com/3d-model/low-poly-cat-46138.html
+
 function [] = Environment()
 %% Inserting Objects
 [f,v,data] = plyread('Table.ply','tri'); % Inserting PLY object
@@ -63,7 +65,7 @@ end
 axis equal; % Set axis to be equal        
 hold on; % Hold figure
 %% Inserting Floor and Walls
-surf([0,0;2,2],[0,2;0,2],[0.02,0.02;0.02,0.02],'CData',imread('WoodFloor.jpg'),'FaceColor','texturemap') % Insert image
+surf([0,0;2,2],[0,2;0,2],[0.002,0.002;0.002,0.002],'CData',imread('WoodFloor.jpg'),'FaceColor','texturemap') % Insert image
 surf([2,2;2,2],[2,2;0,0],[1,0;1,0],'CData',imread('RightWall.jpg'),'FaceColor','texturemap') % Insert image
 surf([2,2;0,0],[2,2;2,2],[1,0;1,0],'CData',imread('Window.jpg'),'FaceColor','texturemap') % Insert image
 end
