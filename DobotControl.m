@@ -1,4 +1,5 @@
-% %% Setting Token Positions
+function [] = DobotControl()
+%% Setting Token Positions
 tokenX1 = transl(0.78,1.30,0.37);
 tokenO2 = transl(1.27,0.70,0.37);
 tokenX3 = transl(0.78,1.15,0.35);
@@ -120,6 +121,9 @@ while(toc < duration) % Begin simulation
     while (toc < dt*counter) % Wait until loop time has elapsed 
     end
 end
+
 if toc > duration % Finish simulation
    disp('Simulation timeout.'); % Display message 
+end
+
 end
