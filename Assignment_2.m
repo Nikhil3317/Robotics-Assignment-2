@@ -1,5 +1,7 @@
 %% DUAL DOBOT GAMEPLAY - Assignment 2 Program
 % Divjot Babra, Nikhil Senthilvel, Vivien Thai
+%run GUI; % Run simulation graphical user interface
+%% Clearing Workspace
 clc % Clear command window
 clearvars % Clear workspace variables
 clf % Close all figures
