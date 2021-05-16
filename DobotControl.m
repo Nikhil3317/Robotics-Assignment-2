@@ -1,5 +1,6 @@
 %% Function for controlling Dobots with joystick
 % Press 'SHARE' button on PS controller to switch between Dobots
+% Press 'OPTIONS' button on PS controller to exit simulation
 
 function [] = DobotControl()
 %% Setting Token Positions
@@ -47,7 +48,6 @@ end
 joy = vrjoystick(1); % Setting up joystick input
 disp('Input commands via joystick.'); % Display message
 %% Simulation variables
-duration = 120; % Set duration of the simulation (seconds)
 dt = 0.3;       % Set time step for simulation (seconds)
 lambda = 0.1;   % Damping factor
 %% Start simulation
@@ -55,7 +55,7 @@ dobotSwitch = 1; % Variable for switching robots
 q = qr(1,1:3); % Initial pose
 counter = 0;  % Reset step counter 
 tic;    % Begin simulation timer
-while(toc < duration) % Begin simulation
+while(1) % Begin simulation
     counter = counter + 1; % Increment step count
     [axes, buttons, ~] = read(joy); % Read joystick input
     if buttons(9) == 1 % For switching between robots
@@ -64,6 +64,10 @@ while(toc < duration) % Begin simulation
        else
            dobotSwitch = 1; % For switching between robots
        end
+    end
+    if buttons(10) == 1 % Check for 'OPTIONS' button press
+       disp('Simulation stopped.'); % Display message
+       break; % Stop simulation
     end
     % -------------------------------------------------------------
     % 1 - Turn joystick input into end-effector velocity command
@@ -123,10 +127,6 @@ while(toc < duration) % Begin simulation
     end
     while (toc < dt*counter) % Wait until loop time has elapsed 
     end
-end
-
-if toc > duration % Finish simulation
-   disp('Simulation timeout.'); % Display message 
 end
 
 end
