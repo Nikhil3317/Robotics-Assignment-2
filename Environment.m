@@ -4,8 +4,7 @@
 % Table: https://grabcad.com/library/zamani-premium-xl-dining-table-1
 % Fire Extinguisher: https://grabcad.com/library/fire-extinguisher-support-1
 % E-stop Button: https://grabcad.com/library/emergency-stop-button
-
-% Cat model was sourced from Free3D - https://free3d.com/3d-model/low-poly-cat-46138.html
+% Cat model was sourced from Free3D: https://free3d.com/3d-model/low-poly-cat-46138.html
 
 function [] = Environment()
 %% Inserting Objects
